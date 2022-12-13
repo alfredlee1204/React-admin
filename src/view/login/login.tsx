@@ -9,11 +9,16 @@ import React from "react"
 import style from './login.module.scss'
 import { Button, Checkbox, Form, Input, Tooltip, Typography } from 'antd';
 import { useNavigate } from "react-router-dom";
+import { useUserApi } from "@/service/api/user";
 
 const Login: React.FC = () => {
+    const { login } = useUserApi()
     const navigateTo = useNavigate();
     const onFinish = (values: any) => {
-        navigateTo('/home')
+        login().then((res) => {
+            console.log(res)
+            // navigateTo('/home')
+        })
     };
 
     const onFinishFailed = (errorInfo: any) => {

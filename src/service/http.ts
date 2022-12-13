@@ -1,11 +1,5 @@
 import Axios, { AxiosRequestConfig } from 'axios'
-import { Await } from 'react-router-dom';
-export interface CustomHttpConfig {
-    showLoading: boolean;
-    headers?: Record<string, any>;
-    hideToast?: boolean;
-    ignoreErrorCode?: (string | number)[];
-}
+
 const axios = Axios.create({
     baseURL: 'http://localhost:8888'
 });
@@ -27,14 +21,12 @@ axios.interceptors.response.use((config) => {
 
 export const post = async (url: string,
     data?: any,
-    customConfig: CustomHttpConfig = { showLoading: false, hideToast: false },
     config: AxiosRequestConfig = {}) => {
     const result = await axios.post(url, data, config)
     return result;
 }
 export const get = async (url: string,
     data?: any,
-    customConfig: CustomHttpConfig = { showLoading: false, hideToast: false },
     config: AxiosRequestConfig = {}) => {
     const result = await axios.get(url, config)
     return result;
