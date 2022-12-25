@@ -10,14 +10,29 @@ import style from './login.module.scss'
 import { Button, Checkbox, Form, Input, Tooltip, Typography } from 'antd';
 import { useNavigate } from "react-router-dom";
 import { useUserApi } from "@/service/api/user";
-
+import { useDispatch } from "react-redux/es/exports";
 const Login: React.FC = () => {
+    const dispatch =useDispatch()
     const { login } = useUserApi()
     const navigateTo = useNavigate();
+    const [form] = Form.useForm();
+    React.useEffect(() => {
+        const userAccount = localStorage.getItem("userAccount")
+        if (userAccount) {
+            //记住密码->初始化表单input初始值
+            //不能使用setState来初始化，因为initialValue只会render一次
+            form.setFieldsValue(Object.assign({ remember: true }, JSON.parse(userAccount)))
+        }
+    }, [])
+
     const onFinish = (values: any) => {
-        login().then((res) => {
-            console.log(res)
-            // navigateTo('/home')
+        const { remember, ...entity } = values
+        if (remember) {
+            localStorage.setItem("userAccount", JSON.stringify(entity))
+        }
+        login(entity).then((res) => {
+            dispatch({type:"userInit",val:res.data})
+            navigateTo('/home')
         })
     };
 
@@ -32,14 +47,14 @@ const Login: React.FC = () => {
                     name="basic"
                     labelCol={{ span: 6 }}
                     wrapperCol={{ span: 14 }}
-                    initialValues={{ remember: true }}
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
+                    form={form}
                 >
                     <Form.Item
                         label="用户名"
-                        name="username"
+                        name="userName"
                         rules={[{ required: true, message: 'Please input your username!' }]}
                     >
                         <Input />
@@ -47,7 +62,7 @@ const Login: React.FC = () => {
 
                     <Form.Item
                         label="密码"
-                        name="password"
+                        name="userPwd"
                         rules={[{ required: true, message: 'Please input your password!' }]}
                     >
                         <Input.Password />
