@@ -4,10 +4,9 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-
     .tips {
         margin-bottom: 0.2rem;
-        font-size: 0.2rem;
+        font-size: 10px;
         text-align: center;
 
         span {
@@ -20,7 +19,8 @@
         background-color: #fff;
         width: 6.8rem;
         box-shadow: 0 4px 25px 0 rgb(0 0 0 / 10%);
-    }
+        padding: 30px;
+}
 
     .title {
         padding: 0.7rem 0;
