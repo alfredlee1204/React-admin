@@ -3,7 +3,7 @@
  * @Author: Lethan
  * @Date: 2022-12-09 14:38:15
  * @LastEditors: Lethan
- * @LastEditTime: 2022-12-27 17:42:34
+ * @LastEditTime: 2022-12-28 14:51:33
  */
 import React from "react"
 import style from './login.module.scss'
@@ -31,7 +31,7 @@ const Login: React.FC = () => {
             localStorage.setItem("userAccount", JSON.stringify(entity))
         }
         login(entity).then((res) => {
-            dispatch({type:"userInit",payload:res.data.userInfo})
+            dispatch({type:"user/init",payload:res.data.userInfo})
             dispatch({type:"premissionInit",payload:res.data.menuInfo})
             navigateTo('/home')
         })

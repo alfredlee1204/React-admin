@@ -1,5 +1,12 @@
+/*
+ * @Descripttion: 
+ * @Author: Lethan
+ * @Date: 2022-12-26 18:43:19
+ * @LastEditors: Lethan
+ * @LastEditTime: 2022-12-28 15:08:02
+ */
 interface UserAction {
-    type:"userInit" |"userInfoUpdate",
+    type:"user/init" |"user/update",
     payload:any
 }
 interface PremissionAction {
@@ -12,24 +19,14 @@ const initState = {
 export const userReducer = (state:any=initState,action:UserAction) =>{
     let newState
     switch (action.type){
-        case "userInit":
+        case "user/init":
             newState=action.payload
             localStorage.setItem("userInfo",JSON.stringify(action.payload))
             return newState
-        case "userInfoUpdate":
+        case "user/update":
             newState={state,...action.payload}
             return newState
         default:
             return state
         } 
-}
-export const premissionReducer = (state:any=initState,action:PremissionAction) =>{
-    // let newState = JSON.parse(JSON.stringify(state))
-    switch (action.type){
-        case "premissionInit":
-            localStorage.setItem("premission",JSON.stringify(action.payload))
-            break
-        }    
-
-    return state
 }
