@@ -1,12 +1,12 @@
-import React from "react";
-import { useRoutes, Link } from "react-router-dom"
-import route from './router'
+import './App.css'
+import { RouterContent } from './router'
+
 function App() {
-  const outlet = useRoutes(route);
+
   return (
-    <div className="App">
-      {outlet}
-    </div>
+    <>
+    <RouterContent></RouterContent>
+    </>
   )
 }
 

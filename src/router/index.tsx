@@ -1,41 +1,19 @@
-import React, { FC, lazy } from "react"
-import RouteLoading from '@/components/loading/routeLoading/routingLoading'
-// import Home from "@/view/Home/home"
-import { Navigate } from "react-router-dom"
-const Home = lazy(() => import("@/view/home/home"))
-const Login = lazy(() => import("@/view/login/login"))
-const Page1 = lazy(() => import("@/view/page1/page1"))
+import { lazy } from "react"
+import { Routes, Route, Navigate } from "react-router-dom"
+import RouteLoading from '@/components/loading'
 
-const routes = [
-    {
-        path: "/*",
-        element: <Navigate to="/home" />,
+const VerifyEnvList = lazy(() => import("@/page/verifyEnvList/verifyEnvList"))
+const BridgeSettingList = lazy(() => import("@/page/bridgeSettingList/bridgeSettingList"))
+const Home = lazy(() => import("@/page/home/home"))
 
-    },
-    {
-        path: "/",
-        element: RouteLoading(<Home />),
-        children: [
-            {
-                path: "/page1",
-                element: RouteLoading(<Page1 />),
-                children: [
-                    {
-                        path: "/page1/page1",
-                        element: RouteLoading(<Page1 />)
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        path: "/home",
-        element: RouteLoading(<Home />)
-    },
-    {
-        path: "/login",
-        element: RouteLoading(<Login />)
-    },
-]
-
-export default routes
+export function RouterContent() {
+    return(
+        <Routes>
+            <Route path={import.meta.env.BASE_URL} element={<Home />}>
+                <Route path={import.meta.env.BASE_URL} element={<Navigate to={import.meta.env.BASE_URL+"/verifyEnvList"} replace />}/>
+                <Route path="verifyEnvList" element={RouteLoading(<VerifyEnvList />)} />
+                <Route path="bridgeSettingList" element={RouteLoading(<BridgeSettingList />)} />
+            </Route>
+        </Routes>
+    )
+}

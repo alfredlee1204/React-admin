@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Space, Spin } from 'antd';
+import { Spin } from 'antd';
 
 const RouteLoading = (children: JSX.Element) => {
     return (
