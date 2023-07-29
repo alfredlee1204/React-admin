@@ -5,7 +5,7 @@ import serverProxy from "./server-proxy";
 
 export default defineConfig({
   plugins: [react()],
-  base:"/ABmanagement",
+  base: "",
   resolve: {
     alias: {
       "@": path.resolve(__dirname, './src')
@@ -14,4 +14,13 @@ export default defineConfig({
   server: {
     proxy: serverProxy,
   },
+  css: {
+    // css预处理器
+    preprocessorOptions: {
+      scss: {
+        // 定义全局的scss变量
+        additionalData: `@import '@/assets/color.scss';`
+      }
+    }
+  }
 })

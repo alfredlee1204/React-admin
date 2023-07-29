@@ -20,23 +20,19 @@ function Home() {
     }
 
     // 处理侧边菜单的初始化
-    const handleMenuInit =()=>{
-        let key=''
-        key = location.pathname.replace(import.meta.env.BASE_URL+'/', '')
-        if(key&&key!==import.meta.env.BASE_URL) {
+    const handleMenuInit = () => {
+        let key = ''
+        key = location.pathname.replace(import.meta.env.BASE_URL, '')
+        if (key && key !== import.meta.env.BASE_URL) {
             return key
         }
-        return 'verifyEnvList'
+        return 'customerService'
     }
     const menuList = [
         {
-            key: 'verifyEnvList',
+            key: 'customerService',
             icon: <AlertOutlined />,
-            label: "审核环境列表",
-        }, {
-            key: 'bridgeSettingList',
-            icon: <ExperimentOutlined />,
-            label: "第三方桥接配置",
+            label: "在线客服",
         }
     ]
     return <>
@@ -48,7 +44,7 @@ function Home() {
             >
                 <div className={style["logo-box"]}>
                     <div className={style.logo}>
-                        代上架管理后台
+                        React 管理系统
                     </div>
                 </div>
                 <Menu
@@ -60,7 +56,7 @@ function Home() {
                 />
             </Sider>
             <Layout>
-                <Content style={{ backgroundColor: "#eeeeee", padding: '5px' }}>
+                <Content style={{ backgroundColor: "#eeeeee", padding: '10px' }}>
                     <Outlet />
                 </Content>
             </Layout>
