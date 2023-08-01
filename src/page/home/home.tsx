@@ -24,7 +24,13 @@ function Home() {
         let key = ''
         key = location.pathname.replace(import.meta.env.BASE_URL, '')
         if (key && key !== import.meta.env.BASE_URL) {
-            return key
+            for (const item of menuList) {
+                const index = key.indexOf(item.key)
+                console.log(index)
+                if (index > -1) {
+                    return item.key
+                }
+            }
         }
         return 'customerService'
     }
