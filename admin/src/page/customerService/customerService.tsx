@@ -1,41 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from "react"
-import io, { Socket } from 'socket.io-client'
-
+import { useEffect, useState } from "react"
+import { observer } from "mobx-react-lite"
 import cssStyle from './customerService.module.scss'
 import Layout from "antd/es/layout";
 import Sider from "antd/es/layout/Sider";
 
 import DefaultAvatarSVG from '@/assets/images/default-user.svg'
 import { Outlet, useNavigate } from "react-router-dom";
+import useSocket from "@/use/useSocket";
 
 
-const CustomerService = () => {
-    const ws = useRef<Socket | null>()
-
-    const messageFormat = useCallback((message: string, target: string) => {
-        const msg = JSON.stringify({
-            target: target,
-            message: message
-        })
-
-        return msg
-    }, [])
-
-    const sendMessage = useCallback((message: string, target: string) => {
-        const msg = messageFormat(target, message)
-        ws.current?.emit('message', msg)
-    }, [messageFormat])
-
-
-    // useEffect(() => {
-    //     ws.current = io(import.meta.env.VITE_SCOKET_DOMAIN, {
-    //         transports: ['websocket']
-    //     })
-    //     ws.current.on('connect', () => {
-    //         console.log("success")
-    //     })
-    //     return () => { ws.current?.disconnect() };
-    // }, [])
+const CustomerService = observer(() => {
 
     return <Layout style={{ height: '100%', borderRadius: 10, overflow: "hidden" }}>
         <MessageSider></MessageSider>
@@ -43,8 +17,9 @@ const CustomerService = () => {
             <Outlet />
         </Layout>
     </Layout>
-}
+})
 
+// 消息侧边栏
 const MessageSider = () => {
     const data = [
         {

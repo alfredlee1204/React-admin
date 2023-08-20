@@ -6,6 +6,7 @@
         display: flex;
         align-items: center;
         padding: 10px;
+        height: 10vh;
         background: #fff;
         border-bottom: 1px solid #e8e8e8;
 
@@ -23,29 +24,60 @@
     }
 
     .message-list {
-        background-color: #eeeeee;
-        height: 65%;
+        height: 60vh;
         overflow-y: scroll;
     }
 
     .inputArea {
+        height: 25vh;
         width: 100%;
         border-top: 1px solid #e8e8e8;
+        padding: 10px;
+
+        .toolBar {
+            padding: 8px;
+
+            .icon {
+                font-size: 20px;
+                color: #555555;
+            }
+        }
+
+        .entry {
+            height: 60%;
+            caret-color: #555555;
+
+            textarea {
+                height: 100%;
+                width: 100%;
+                border: none;
+                resize: none;
+            }
+
+            textarea:focus {
+                outline: none
+            }
+        }
+
+        .btn-send {
+            display: flex;
+            justify-content: flex-end;
+        }
     }
 }
 
-
-
-
+.message-item-other,
+.message-item-self {
+    padding: 10px 10px;
+    width: 100%;
+}
 
 .message-item-other {
     display: flex;
-    padding: 0 10px;
-    width: 100%;
 
     .message-body {
         background: #fff;
-        color: #fff;
+        color: #000;
         border-radius: 8px;
         padding: 5px 10px;
     }
@@ -56,8 +88,6 @@
 .message-item-self {
     display: flex;
     justify-content: flex-end;
-    padding: 0 10px;
-    width: 100%;
 
     .message-body {
         background: $primary;

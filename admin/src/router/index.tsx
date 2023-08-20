@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom"
 import RouteLoading from '@/components/loading'
 
 const CustomerService = lazy(() => import("@/page/customerService/customerService"))
-const ChatWindow = lazy(() => import("@/page/customerService/components/chatWindow/chatWindow"))
+const ChatWindow = lazy(() => import("@/page/customerService/views/chatWindow/chatWindow"))
 const Home = lazy(() => import("@/page/home/home"))
 
 export function RouterContent() {

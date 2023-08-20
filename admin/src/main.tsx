@@ -5,6 +5,7 @@ import './index.css'
 import { BrowserRouter } from 'react-router-dom'
 import ConfigProvider from 'antd/es/config-provider/index'
 import { MsgProvider } from './use/useMessage/messageProvider.tsx'
+import SocketProvider from './store/socket/messageProvider.tsx'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
@@ -17,7 +18,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         }}
       >
         <MsgProvider>
-          <App />
+          <SocketProvider>
+            <App />
+          </SocketProvider>
         </MsgProvider>
       </ConfigProvider>
     </BrowserRouter>
