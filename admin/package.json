@@ -19,7 +19,6 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.10.0",
     "sass": "^1.62.0",
-    "socket.io-client": "^4.7.1",
     "vite-plugin-style-import": "^2.0.0"
   },
   "devDependencies": {
