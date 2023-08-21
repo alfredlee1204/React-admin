@@ -6,14 +6,16 @@ export class MessageStore {
         makeAutoObservable(this)
     }
 
-    messageList: Message[][] = []
+    messageList = new Map<number, Message[]>()
 
     updateMessageList(room_id: number, data: string) {
-        const msgData: Message[] = JSON.parse(data)
-        if (this.messageList[room_id]) {
-            this.messageList[room_id] = msgData
+        const msgData: Message = JSON.parse(data)
+        const old_data = this.messageList.get(room_id)
+        if (old_data) {
+            old_data.push(msgData)
+            this.messageList.set(room_id, old_data)
         } else {
-            this.messageList[room_id] = msgData
+            this.messageList.set(room_id, [...[msgData]])
         }
     }
 }

@@ -9,7 +9,6 @@ const useSocket = (target_id: number) => {
     const handleMessage = useCallback(
         (ev: { data: string }) => {
             msgStore.updateMessageList(room_id, ev.data)
-            console.log(msgStore.messageList[room_id])
         }, [msgStore, room_id]
     )
 
@@ -40,7 +39,7 @@ const useSocket = (target_id: number) => {
 
     }, [handleMessage, msgStore?.messageList, room_id])
 
-    return { sendWsMsg, ...{ messageList: msgStore.messageList[room_id] } }
+    return { sendWsMsg, ...{ messageList: msgStore.messageList.get(room_id) } }
 }
 
 export default useSocket

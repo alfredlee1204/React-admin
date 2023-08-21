@@ -8,7 +8,7 @@ function handleWs(ws, req) {
             const message = JSON.parse(msg)
             message['time'] = new Date().getTime()
             wsClients[req.params.id].msgList.push(message)
-            wsClients[req.params.id].ws.send(JSON.stringify(wsClients[req.params.id].msgList))
+            wsClients[req.params.id].ws.send(JSON.stringify(message))
         }
     })
 }
