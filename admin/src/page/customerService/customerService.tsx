@@ -6,7 +6,7 @@ import Sider from "antd/es/layout/Sider";
 
 import DefaultAvatarSVG from '@/assets/images/default-user.svg'
 import { Outlet, useNavigate } from "react-router-dom";
-import useSocket from "@/use/useSocket";
+import useSocket from "@/use/useWebSocket";
 
 
 const CustomerService = observer(() => {

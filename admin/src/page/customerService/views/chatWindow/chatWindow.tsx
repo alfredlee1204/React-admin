@@ -6,9 +6,9 @@ import {
     SendOutlined
 } from '@ant-design/icons';
 import { Button } from 'antd';
-import useSocket from '@/use/useSocket';
+import useWebSocket from '@/use/useWebSocket';
 import { observer } from "mobx-react-lite"
-import { CSSTransition } from 'react-transition-group'
+import { motion } from 'framer-motion';
 
 type Message = {
     id: string,
@@ -48,22 +48,27 @@ const ChatWindowTopbar = () => {
 }
 
 const MessageList = observer(() => {
-    const [inProp, setInProp] = useState(false);
-    const { messageList } = useSocket(2)
+    const { messageList } = useWebSocket(2)
     const listEnd = useRef<HTMLDivElement | null>(null)
     useEffect(() => {
-        setInProp(true)
         // 有新消息的时候自动滚到底部
         listEnd.current?.scrollIntoView(false);
     }, [messageList?.length])
     return (
         <div className={cssStyle["message-list"]}>
-            <CSSTransition in={inProp} timeout={200} classNames="my-node">
-                <>
-                    {messageList?.map(item => {
-                        return <MessageItem key={item.time} data={item}></MessageItem>
-                    })}</>
-            </CSSTransition>
+            {messageList?.map(item => {
+                return (
+                    <motion.div
+                        key={item.time}
+                        layout
+                        transition={{ duration: 0.2 }}
+                        initial={{ y: 10, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }} >
+                        <MessageItem data={item}></MessageItem>
+                    </motion.div>
+                )
+            })}
+
             <div style={{ float: "left", clear: "both" }}
                 ref={listEnd}>
             </div>
@@ -73,17 +78,18 @@ const MessageList = observer(() => {
 })
 
 const InputArea = () => {
-    const { sendWsMsg } = useSocket(2)
+    const { sendWsMsg } = useWebSocket(2)
     const textareaRef = useRef<HTMLTextAreaElement | null>(null)
     const [content, setContent] = useState('');
     const handleInput = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setContent(e.target.value)
     }, [])
     const sendMsg = useCallback(() => {
-        sendWsMsg(content)
-        setContent('')
-        textareaRef.current?.focus()
-
+        if (content) {
+            sendWsMsg(content)
+            setContent('')
+            textareaRef.current?.focus()
+        }
     }, [content, sendWsMsg])
     return (
         <div className={cssStyle["inputArea"]}>
@@ -102,9 +108,7 @@ const InputArea = () => {
 
 const MessageItem = (prop: { data: Message }) => {
     const { content, from } = prop.data
-    // useEffect(() => {
-    //     console.log(content)
-    // })
+
     return <div className={cssStyle[from === 1 ? "message-item-self" : "message-item-other"]}>
         <div className={cssStyle["message-body"]}>
             {content}

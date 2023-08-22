@@ -47,7 +47,8 @@
             height: 60%;
 
             textarea {
-                caret-color: #555555;
+                padding: 0 8px;
+                font-size: 16px;
                 height: 100%;
                 width: 100%;
                 border: none;
@@ -55,7 +56,8 @@
             }
 
             textarea:focus {
-                outline: none
+                outline: none;
+                caret-color: #555555;
             }
         }
 
@@ -76,7 +78,7 @@
     display: flex;
 
     .message-body {
-        background: #fff;
+        background: #e4e4e4;
         color: #000;
         border-radius: 8px;
         padding: 5px 10px;
@@ -90,6 +92,7 @@
     justify-content: flex-end;
 
     .message-body {
+        max-width: 60%;
         background: $primary;
         color: #fff;
         border-radius: 8px;

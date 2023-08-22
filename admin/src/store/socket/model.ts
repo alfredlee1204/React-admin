@@ -7,3 +7,8 @@ export type Message = {
     time: string
 }
 
+export type WebSocketData = {
+    wsInstance: WebSocket | null,
+    messageList: Message[]
+}
+
