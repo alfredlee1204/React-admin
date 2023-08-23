@@ -49,6 +49,7 @@
             textarea {
                 padding: 0 8px;
                 font-size: 16px;
+                font-family: "PingFang SC";
                 height: 100%;
                 width: 100%;
                 border: none;
@@ -78,10 +79,13 @@
     display: flex;
 
     .message-body {
+        padding: 8px 12px;
+        max-width: 60%;
         background: #e4e4e4;
         color: #000;
         border-radius: 8px;
-        padding: 5px 10px;
+        letter-spacing: 1px;
+        font-size: 15px;
     }
 
 
@@ -92,10 +96,12 @@
     justify-content: flex-end;
 
     .message-body {
+        padding: 8px 12px;
         max-width: 60%;
         background: $primary;
         color: #fff;
         border-radius: 8px;
-        padding: 5px 10px;
+        letter-spacing: 1px;
+        font-size: 15px;
     }
 }

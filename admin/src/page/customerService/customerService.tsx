@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import cssStyle from './customerService.module.scss'
 import Layout from "antd/es/layout";
@@ -6,7 +5,6 @@ import Sider from "antd/es/layout/Sider";
 
 import DefaultAvatarSVG from '@/assets/images/default-user.svg'
 import { Outlet, useNavigate } from "react-router-dom";
-import useSocket from "@/use/useWebSocket";
 
 
 const CustomerService = observer(() => {

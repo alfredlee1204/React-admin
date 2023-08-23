@@ -9,6 +9,7 @@ import { Button } from 'antd';
 import useWebSocket from '@/use/useWebSocket';
 import { observer } from "mobx-react-lite"
 import { motion } from 'framer-motion';
+import { useNavigate, useParams } from 'react-router-dom';
 
 type Message = {
     id: string,
@@ -19,8 +20,9 @@ type Message = {
     time: string
 }
 const ChatWindow = observer(() => {
+    const { id } = useParams();
     return (
-        <div className={cssStyle["chatWindow"]} style={{ backgroundColor: "#fff" }}>
+        <div key={id} className={cssStyle["chatWindow"]} style={{ backgroundColor: "#fff" }}>
             <ChatWindowTopbar />
             <MessageList />
             <InputArea />
@@ -48,12 +50,13 @@ const ChatWindowTopbar = () => {
 }
 
 const MessageList = observer(() => {
-    const { messageList } = useWebSocket(2)
+    const { id } = useParams();
+    const { messageList } = useWebSocket(Number(id))
     const listEnd = useRef<HTMLDivElement | null>(null)
     useEffect(() => {
         // 有新消息的时候自动滚到底部
         listEnd.current?.scrollIntoView(false);
-    }, [messageList?.length])
+    }, [id, messageList, messageList.length])
     return (
         <div className={cssStyle["message-list"]}>
             {messageList?.map(item => {
@@ -77,25 +80,24 @@ const MessageList = observer(() => {
     )
 })
 
-const InputArea = () => {
-    const { sendWsMsg } = useWebSocket(2)
+const InputArea = observer(() => {
+    const { id } = useParams();
+    const { sendWsMsg } = useWebSocket(Number(id))
     const textareaRef = useRef<HTMLTextAreaElement | null>(null)
-    const [content, setContent] = useState('');
-    const handleInput = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setContent(e.target.value)
-    }, [])
+
     const sendMsg = useCallback(() => {
-        if (content) {
-            sendWsMsg(content)
-            setContent('')
+        // 非受控组件-完全由用户控制输入
+        if (textareaRef.current?.value) {
+            sendWsMsg(textareaRef.current?.value)
+            textareaRef.current.value = ''
             textareaRef.current?.focus()
         }
-    }, [content, sendWsMsg])
+    }, [sendWsMsg])
     return (
         <div className={cssStyle["inputArea"]}>
             <div className={cssStyle["toolBar"]}><SmileOutlined className={cssStyle["icon"]} /></div>
             <div className={cssStyle["entry"]}>
-                <textarea ref={textareaRef} value={content} onChange={handleInput}></textarea>
+                <textarea ref={textareaRef}></textarea>
             </div>
             <div className={cssStyle["btn-send"]}>
                 <Button onClick={sendMsg} type="primary" icon={<SendOutlined />}>
@@ -104,7 +106,7 @@ const InputArea = () => {
             </div>
         </div>
     )
-}
+})
 
 const MessageItem = (prop: { data: Message }) => {
     const { content, from } = prop.data

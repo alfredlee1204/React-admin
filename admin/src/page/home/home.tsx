@@ -26,7 +26,6 @@ function Home() {
         if (key && key !== import.meta.env.BASE_URL) {
             for (const item of menuList) {
                 const index = key.indexOf(item.key)
-                console.log(index)
                 if (index > -1) {
                     return item.key
                 }
