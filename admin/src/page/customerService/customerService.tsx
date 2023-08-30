@@ -4,7 +4,11 @@ import Layout from "antd/es/layout";
 import Sider from "antd/es/layout/Sider";
 
 import DefaultAvatarSVG from '@/assets/images/default-user.svg'
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
+import useApi from "@/service/api";
+import { useContext, useEffect, useState } from "react";
+import { SiderMessageList_res } from "@/service/model";
+import WebSocketContext from "@/store/socket/webSocketContext";
 
 
 const CustomerService = observer(() => {
@@ -18,27 +22,8 @@ const CustomerService = observer(() => {
 })
 
 // 消息侧边栏
-const MessageSider = () => {
-    const data = [
-        {
-            id: 1,
-            username: "用户1",
-            content: "消息1",
-            avatar: DefaultAvatarSVG
-        },
-        {
-            id: 2,
-            username: "用户2",
-            content: "消息1",
-            avatar: DefaultAvatarSVG
-        },
-        {
-            id: 3,
-            username: "用户3",
-            content: "消息1213412412412432143",
-            avatar: DefaultAvatarSVG
-        }
-    ]
+const MessageSider = observer(() => {
+    const wsStore = useContext(WebSocketContext)
     return (
         <Sider
             style={{ backgroundColor: "#f5f5f5", }}
@@ -47,38 +32,40 @@ const MessageSider = () => {
                 <div className={cssStyle["message-sider-title"]}>用户列表</div>
                 <div className={cssStyle["message-sider-list"]}>
                     {
-                        data.map(item => {
+                        wsStore.siderMessageList.map(item => {
                             return <MsssageSiderItem key={item.id} item={item} />
                         })
                     }
-
                 </div>
-
             </div>
-
         </Sider>
     )
-}
+})
 
-const MsssageSiderItem = (prop: any) => {
+const MsssageSiderItem = observer((prop: { item: SiderMessageList_res }) => {
     const navigateTo = useNavigate();
+    const { id } = useParams();
     const { item } = prop
+
     return (
-        <div onClick={() => { navigateTo('user/' + item.id) }} className={cssStyle["msssage-sider-item"]}>
-            <div className={cssStyle["avatar"]}>
-                <img src={item.avatar} />
-            </div>
-            <div className={cssStyle["right"]}>
-                <div className={cssStyle["name"]}>
-                    {item.username}
+        <div style={{ backgroundColor: id === item.user_id + '' ? 'rgb(115, 103, 240, 0.1)' : '#fff' }}>
+            <div className={cssStyle["msssage-sider-item"]} onClick={() => { navigateTo('user/' + item.user_id) }}>
+                <div className={cssStyle["avatar"]}>
+                    <img src={item.avatar ? item.avatar : DefaultAvatarSVG} />
                 </div>
-                <div className={cssStyle["message"]}>
-                    {item.content}
+                <div className={cssStyle["right"]}>
+                    <div className={cssStyle["name"]}>
+                        {item.user_name}
+                    </div>
+                    <div className={cssStyle["message"]}>
+                        {item.lastMessage}
+                    </div>
                 </div>
+                <div className={cssStyle["msg-count"]}>{item.unreadCount > 99 ? `99+` : item.unreadCount}</div>
             </div>
         </div>
     )
-}
+})
 
 
 

@@ -10,15 +10,8 @@ import useWebSocket from '@/use/useWebSocket';
 import { observer } from "mobx-react-lite"
 import { motion } from 'framer-motion';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Message } from '@/store/socket/model';
 
-type Message = {
-    id: string,
-    type: 'text' | 'image' | 'video'
-    content: string,
-    from: number,
-    target: number,
-    time: string
-}
 const ChatWindow = observer(() => {
     const { id } = useParams();
     return (
@@ -51,12 +44,12 @@ const ChatWindowTopbar = () => {
 
 const MessageList = observer(() => {
     const { id } = useParams();
-    const { messageList } = useWebSocket(Number(id))
+    const { messageList } = useWebSocket('1', id)
     const listEnd = useRef<HTMLDivElement | null>(null)
     useEffect(() => {
         // 有新消息的时候自动滚到底部
         listEnd.current?.scrollIntoView(false);
-    }, [id, messageList, messageList.length])
+    }, [id, messageList, messageList?.length])
     return (
         <div className={cssStyle["message-list"]}>
             {messageList?.map(item => {
@@ -82,7 +75,7 @@ const MessageList = observer(() => {
 
 const InputArea = observer(() => {
     const { id } = useParams();
-    const { sendWsMsg } = useWebSocket(Number(id))
+    const { sendWsMsg } = useWebSocket('1', id)
     const textareaRef = useRef<HTMLTextAreaElement | null>(null)
 
     const sendMsg = useCallback(() => {
@@ -111,7 +104,7 @@ const InputArea = observer(() => {
 const MessageItem = (prop: { data: Message }) => {
     const { content, from } = prop.data
 
-    return <div className={cssStyle[from === 1 ? "message-item-self" : "message-item-other"]}>
+    return <div className={cssStyle[from === '1' ? "message-item-self" : "message-item-other"]}>
         <div className={cssStyle["message-body"]}>
             {content}
         </div>

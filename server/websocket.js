@@ -1,9 +1,11 @@
 const wsClients = {}
 
 function handleWs(ws, req) {
+    console.log(req.params.id)
     // 将连接记录在连接池中
     wsClients[req.params.id] = { ws, msgList: [] };
     ws.on("message", (msg) => {
+        console.log(msg)
         if (verifyJSON(msg)) {
             const message = JSON.parse(msg)
             message['time'] = new Date().getTime()

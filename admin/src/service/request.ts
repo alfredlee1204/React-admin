@@ -3,18 +3,17 @@ import Axios, { AxiosRequestConfig } from "axios";
 import { useCallback } from "react";
 
 type resType<T> = {
-  data: { data: T; message: string; status: number };
+  status: number;
+  data: { data: T; message: string; };
 };
 const axios = Axios.create({
-  baseURL: import.meta.env.VITE_SCOKET_DOMAIN,
+  baseURL: import.meta.env.VITE_API_DOMAIN,
 });
 const useRequest = () => {
-
-
   const { messageApi } = useMessage()
 
   const handleResult = useCallback(<T>(result: resType<T>) => {
-    if (result.data.status !== 200 || result.data.message !== "Success") {
+    if (result.status !== 200) {
       messageApi.error(result.data.message)
     }
     return result.data;
