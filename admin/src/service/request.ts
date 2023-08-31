@@ -1,4 +1,4 @@
-import { useMessage } from "@/use/useMessage/useMessage";
+import { useMessage } from "@/use/useToast/useToast";
 import Axios, { AxiosRequestConfig } from "axios";
 import { useCallback } from "react";
 
@@ -10,14 +10,14 @@ const axios = Axios.create({
   baseURL: import.meta.env.VITE_API_DOMAIN,
 });
 const useRequest = () => {
-  const { messageApi } = useMessage()
+  const { toast } = useMessage()
 
   const handleResult = useCallback(<T>(result: resType<T>) => {
     if (result.status !== 200) {
-      messageApi.error(result.data.message)
+      toast.error(result.data.message)
     }
     return result.data;
-  }, [messageApi])
+  }, [toast])
 
   const POST = useCallback(async <T>(
     url: string,

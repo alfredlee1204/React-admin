@@ -9,8 +9,9 @@ import { Button } from 'antd';
 import useWebSocket from '@/use/useWebSocket';
 import { observer } from "mobx-react-lite"
 import { motion } from 'framer-motion';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Message } from '@/store/socket/model';
+import { useRootStore } from '@/store/rootProvider';
 
 const ChatWindow = observer(() => {
     const { id } = useParams();
@@ -44,15 +45,15 @@ const ChatWindowTopbar = () => {
 
 const MessageList = observer(() => {
     const { id } = useParams();
-    const { messageList } = useWebSocket('1', id)
+    const { messageRecordStore } = useRootStore()
     const listEnd = useRef<HTMLDivElement | null>(null)
     useEffect(() => {
         // 有新消息的时候自动滚到底部
         listEnd.current?.scrollIntoView(false);
-    }, [id, messageList, messageList?.length])
+    }, [])
     return (
         <div className={cssStyle["message-list"]}>
-            {messageList?.map(item => {
+            {messageRecordStore.getMessageData(Number(id))?.map(item => {
                 return (
                     <motion.div
                         key={item.time}
@@ -75,17 +76,17 @@ const MessageList = observer(() => {
 
 const InputArea = observer(() => {
     const { id } = useParams();
-    const { sendWsMsg } = useWebSocket('1', id)
+    const { sendWsMsg } = useWebSocket()
     const textareaRef = useRef<HTMLTextAreaElement | null>(null)
 
     const sendMsg = useCallback(() => {
         // 非受控组件-完全由用户控制输入
         if (textareaRef.current?.value) {
-            sendWsMsg(textareaRef.current?.value)
+            sendWsMsg(Number(id), textareaRef.current?.value)
             textareaRef.current.value = ''
             textareaRef.current?.focus()
         }
-    }, [sendWsMsg])
+    }, [id, sendWsMsg])
     return (
         <div className={cssStyle["inputArea"]}>
             <div className={cssStyle["toolBar"]}><SmileOutlined className={cssStyle["icon"]} /></div>

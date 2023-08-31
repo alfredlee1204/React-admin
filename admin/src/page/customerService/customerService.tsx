@@ -5,25 +5,22 @@ import Sider from "antd/es/layout/Sider";
 
 import DefaultAvatarSVG from '@/assets/images/default-user.svg'
 import { Outlet, useNavigate, useParams } from "react-router-dom";
-import useApi from "@/service/api";
-import { useContext, useEffect, useState } from "react";
-import { SiderMessageList_res } from "@/service/model";
-import WebSocketContext from "@/store/socket/webSocketContext";
-
+import { useRootStore } from "@/store/rootProvider";
+import { Conversation } from "@/store/socket/model";
 
 const CustomerService = observer(() => {
 
     return <Layout style={{ height: '100%', borderRadius: 10, overflow: "hidden" }}>
-        <MessageSider></MessageSider>
+        <ConversationSider></ConversationSider>
         <Layout>
             <Outlet />
         </Layout>
     </Layout>
 })
 
-// 消息侧边栏
-const MessageSider = observer(() => {
-    const wsStore = useContext(WebSocketContext)
+// 侧边栏-会话列表
+const ConversationSider = observer(() => {
+    const { messageRecordStore } = useRootStore()
     return (
         <Sider
             style={{ backgroundColor: "#f5f5f5", }}
@@ -32,8 +29,8 @@ const MessageSider = observer(() => {
                 <div className={cssStyle["message-sider-title"]}>用户列表</div>
                 <div className={cssStyle["message-sider-list"]}>
                     {
-                        wsStore.siderMessageList.map(item => {
-                            return <MsssageSiderItem key={item.id} item={item} />
+                        messageRecordStore.conversationList.map(item => {
+                            return <ConversationItem key={item.id} item={item} />
                         })
                     }
                 </div>
@@ -42,7 +39,7 @@ const MessageSider = observer(() => {
     )
 })
 
-const MsssageSiderItem = observer((prop: { item: SiderMessageList_res }) => {
+const ConversationItem = observer((prop: { item: Conversation }) => {
     const navigateTo = useNavigate();
     const { id } = useParams();
     const { item } = prop

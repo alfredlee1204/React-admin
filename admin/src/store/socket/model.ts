@@ -2,21 +2,15 @@ export type Message = {
     id: string,
     type: 'text' | 'image' | 'video'
     content: string,
-    from: string,
-    target: string,
-    time: string
+    from: number,
+    target: number,
+    time: number
 }
 
-export type WebSocketData = {
-    wsInstance: WebSocket | null,
-    messageList: Message[]
-}
-
-export type SiderMessage = {
+export type Conversation = {
     id: string,
     lastMessage: string,
     time: string,
-    isread: boolean,
     unreadCount: number,
     user_id: string,
     user_name: string,

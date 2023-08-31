@@ -2,11 +2,11 @@ import { message } from 'antd'
 import { MessageInstance } from 'antd/es/message/interface'
 import React, { createContext } from 'react'
 
-type MsgProviderType = {
+type ToastProviderType = {
     children: React.ReactNode
 }
 
-const msg: MessageInstance = {
+const toast: MessageInstance = {
     info: function () {
         throw new Error('Function not implemented.')
     },
@@ -29,14 +29,16 @@ const msg: MessageInstance = {
         throw new Error('Function not implemented.')
     },
 }
-export const MsgContext = createContext(msg)
+export const ToastContext = createContext(toast)
 
-export const MsgProvider = ({ children }: MsgProviderType) => {
+const ToastProvider = ({ children }: ToastProviderType) => {
     const [messageApi, contextHolder] = message.useMessage();
     return (
-        <MsgContext.Provider value={messageApi}>
+        <ToastContext.Provider value={messageApi}>
             {contextHolder}
             {children}
-        </MsgContext.Provider>
+        </ToastContext.Provider>
     )
 }
+
+export default ToastProvider

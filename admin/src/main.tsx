@@ -4,8 +4,8 @@ import App from './App.tsx'
 import './index.css'
 import { BrowserRouter } from 'react-router-dom'
 import ConfigProvider from 'antd/es/config-provider/index'
-import { MsgProvider } from './use/useMessage/messageProvider.tsx'
-import WebSocketProvider from './store/socket/webSocketProvider.tsx'
+import  ToastProvider from './use/useToast/toastProvider.tsx'
+import { RootStoreProvider } from './store/rootProvider.tsx'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
@@ -17,11 +17,11 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
           },
         }}
       >
-        <MsgProvider>
-          <WebSocketProvider>
+        <ToastProvider>
+          <RootStoreProvider>
             <App />
-          </WebSocketProvider>
-        </MsgProvider>
+          </RootStoreProvider>
+        </ToastProvider>
       </ConfigProvider>
     </BrowserRouter>
   </React.StrictMode>
