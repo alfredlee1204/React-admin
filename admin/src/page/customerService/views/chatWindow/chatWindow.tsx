@@ -6,12 +6,12 @@ import {
     SendOutlined
 } from '@ant-design/icons';
 import { Button } from 'antd';
-import useWebSocket from '@/use/useWebSocket';
+
 import { observer } from "mobx-react-lite"
 import { motion } from 'framer-motion';
 import { useParams } from 'react-router-dom';
 import { Message } from '@/store/socket/model';
-import { useRootStore } from '@/store/rootProvider';
+import { useRootStore, useWebSocket } from '@/store/rootProvider';
 
 const ChatWindow = observer(() => {
     const { id } = useParams();
@@ -76,17 +76,17 @@ const MessageList = observer(() => {
 
 const InputArea = observer(() => {
     const { id } = useParams();
-    const { sendWsMsg } = useWebSocket()
+    const { sendMessage } = useWebSocket()
     const textareaRef = useRef<HTMLTextAreaElement | null>(null)
 
     const sendMsg = useCallback(() => {
         // 非受控组件-完全由用户控制输入
         if (textareaRef.current?.value) {
-            sendWsMsg(Number(id), textareaRef.current?.value)
+            sendMessage(Number(id), textareaRef.current?.value)
             textareaRef.current.value = ''
             textareaRef.current?.focus()
         }
-    }, [id, sendWsMsg])
+    }, [id, sendMessage])
     return (
         <div className={cssStyle["inputArea"]}>
             <div className={cssStyle["toolBar"]}><SmileOutlined className={cssStyle["icon"]} /></div>
@@ -105,7 +105,7 @@ const InputArea = observer(() => {
 const MessageItem = (prop: { data: Message }) => {
     const { content, from } = prop.data
 
-    return <div className={cssStyle[from === '1' ? "message-item-self" : "message-item-other"]}>
+    return <div className={cssStyle[from === 1 ? "message-item-self" : "message-item-other"]}>
         <div className={cssStyle["message-body"]}>
             {content}
         </div>

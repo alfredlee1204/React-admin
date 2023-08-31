@@ -9,23 +9,17 @@ import { AlertOutlined, ExperimentOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import style from './home.module.scss'
 import { Outlet, useLocation, useNavigate } from "react-router-dom"
-import useWebSocket from '@/use/useWebSocket';
 import { useContext, useEffect } from 'react';
 import useApi from '@/service/api';
-import WebSocketContext from '@/store/socket/webSocketContext';
 
 const { Content, Sider } = Layout;
 
 function Home() {
-    const wsStore = useContext(WebSocketContext)
-    const { getSiderMessageList } = useApi()
     const navigateTo = useNavigate();
     const location = useLocation()
     const navigate = (prop: { key: string }) => {
         navigateTo(prop?.key)
     }
-    useWebSocket('1')
-
     // 处理侧边菜单的初始化
     const handleMenuInit = () => {
         let key = ''
@@ -48,11 +42,6 @@ function Home() {
         }
     ]
 
-    useEffect(() => {
-        getSiderMessageList({ user_id: '1' }).then((res) => {
-            wsStore.siderMessageList = res.data
-        })
-    }, [getSiderMessageList, wsStore])
     return <>
         <Layout style={{ minHeight: '100%' }}>
             <Sider
