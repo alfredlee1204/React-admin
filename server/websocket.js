@@ -11,6 +11,7 @@ function handleWs(ws, req) {
             message['time'] = new Date().getTime()
             if (message["messageType"] === MessageType.CHAT_MESSAGE) {
                 if (wsClients[message['target']]) {
+                    message["isread"]=false;
                     wsClients[message['target']].ws.send(JSON.stringify(message))
 
                     // 消息回执

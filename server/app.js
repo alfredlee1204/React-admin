@@ -2,7 +2,6 @@ const express = require('express');
 const expressWs = require('express-ws') // 引入 WebSocket 包
 const http = require('http');
 const handleWs = require('./websocket')
-const router = require('./api/user')
 const router_message = require('./api/message')
 const app = express();
 expressWs(app) // 将 WebSocket 服务混入 app，相当于为 app 添加 .ws 方法
@@ -23,7 +22,6 @@ app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use('/api', router)
 app.use('/api', router_message)
 app.ws('/ws/:id', handleWs)
 app.listen(8888, () => {

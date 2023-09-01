@@ -3,17 +3,18 @@ export type Message = {
     type: 'text' | 'image' | 'video'
     content: string,
     from: number,
+    from_user_name: string,
     target: number,
-    time: number
+    time: number,
+    isread:boolean
 }
 
 export type Conversation = {
-    id: string,
     lastMessage: string,
-    time: string,
+    time: number,
     unreadCount: number,
-    user_id: string,
+    user_id: number,
     user_name: string,
-    avatar: ''
+    avatar: string
 }
 

@@ -11,15 +11,25 @@ import style from './home.module.scss'
 import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import { useContext, useEffect } from 'react';
 import useApi from '@/service/api';
+import { useMessage, useWebSocket } from '@/store/rootProvider';
+import { observer } from 'mobx-react-lite';
 
 const { Content, Sider } = Layout;
 
-function Home() {
+const Home =observer (function Home() {
+    const { wsInit } = useWebSocket()
+    const {saveMessageData} = useMessage()
     const navigateTo = useNavigate();
     const location = useLocation()
     const navigate = (prop: { key: string }) => {
         navigateTo(prop?.key)
     }
+    useEffect(()=>{
+        wsInit('1')
+        return ()=>{
+            saveMessageData()
+        }
+    },[saveMessageData, wsInit])
     // 处理侧边菜单的初始化
     const handleMenuInit = () => {
         let key = ''
@@ -69,6 +79,6 @@ function Home() {
             </Layout>
         </Layout>
     </>
-}
+})
 
 export default Home

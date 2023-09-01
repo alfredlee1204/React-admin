@@ -13,7 +13,7 @@ export const useWebSocket = ()=>{
 }
 
 export const useMessage = ()=>{
-    return useRootStore().webSocketStore
+    return useRootStore().messageRecordStore
  }
 
 export function RootStoreProvider({ children }: { children: JSX.Element }) {

@@ -9,7 +9,6 @@ import { useRootStore } from "@/store/rootProvider";
 import { Conversation } from "@/store/socket/model";
 
 const CustomerService = observer(() => {
-
     return <Layout style={{ height: '100%', borderRadius: 10, overflow: "hidden" }}>
         <ConversationSider></ConversationSider>
         <Layout>
@@ -29,8 +28,8 @@ const ConversationSider = observer(() => {
                 <div className={cssStyle["message-sider-title"]}>用户列表</div>
                 <div className={cssStyle["message-sider-list"]}>
                     {
-                        messageRecordStore.conversationList.map(item => {
-                            return <ConversationItem key={item.id} item={item} />
+                        messageRecordStore.conversationList.map((item,index) => {
+                            return <ConversationItem key={index} item={item} />
                         })
                     }
                 </div>

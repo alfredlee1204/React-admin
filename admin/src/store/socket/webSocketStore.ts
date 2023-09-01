@@ -9,7 +9,7 @@ export class WebSocketStore {
     }
     #root: RootStore
     wsInstance: WebSocket | null = null
-    wsInit(token: string): WebSocket {
+    wsInit = (token: string): WebSocket => {
         if (!this.wsInstance) {
             this.wsInstance = new WebSocket(import.meta.env.VITE_SCOKET_DOMAIN + token)
             if (this.wsInstance) {
@@ -30,9 +30,10 @@ export class WebSocketStore {
         return this.wsInstance
     }
 
-    sendMessage(target_id: number,msgContent: string) {
-        if(this.wsInstance){
+    sendMessage = (target_id: number, msgContent: string) => {
+        if (this.wsInstance) {
             const msg = JSON.stringify({
+                messageType: "CHAT_MESSAGE",
                 target: target_id,
                 content: msgContent,
                 from: '1'
