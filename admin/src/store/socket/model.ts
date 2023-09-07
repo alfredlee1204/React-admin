@@ -1,12 +1,12 @@
 export type Message = {
-    id: string,
+    messageType: string
     type: 'text' | 'image' | 'video'
     content: string,
     from: number,
     from_user_name: string,
-    target: number,
+    target: string | number,
     time: number,
-    isread:boolean
+    isread: boolean
 }
 
 export type Conversation = {

@@ -27,11 +27,14 @@ export class MessageRecordStore {
         }
     }
 
+    // 获取客户的消息
     getMessageData = (user_id: string) => {
         return this.messageMap.get(user_id)
     }
 
-    addMessage = (user_id: number, message: Message) => {
+    // 添加消息
+    addMessage = (user_id: number | string, message: Message) => {
+        console.log(user_id)
         const arr = this.messageMap.get(user_id.toString())
         if (arr) {
             arr?.push(message)
@@ -61,6 +64,7 @@ export class MessageRecordStore {
         this.conversationList = arr
     }
 
+    //计算未读消息
     countUnread = (messageArr: Message[]) => {
         const count = messageArr.reduce((count, item) => {
             if (item['isread'] === false) {
@@ -71,6 +75,23 @@ export class MessageRecordStore {
         return count
     }
 
+    // 消息已读
+    readMsg = (user_id: string) => {
+        const res = this.getMessageData(user_id)
+        if (res) {
+            for (const item of res) {
+                item.isread = true
+            }
+        }
+        for (const item of this.conversationList) {
+            if (item.user_id.toString() === user_id) {
+                item.unreadCount = 0
+            }
+        }
+
+    }
+
+    // 根据时间对会话列表进行排序
     sortByTime = (item_a: Conversation, item_b: Conversation) => {
         return (item_a.time - item_b.time)
     }

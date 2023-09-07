@@ -5,7 +5,7 @@ import Sider from "antd/es/layout/Sider";
 
 import DefaultAvatarSVG from '@/assets/images/default-user.svg'
 import { Outlet, useNavigate, useParams } from "react-router-dom";
-import { useRootStore } from "@/store/rootProvider";
+import { useMessage, useRootStore } from "@/store/rootProvider";
 import { Conversation } from "@/store/socket/model";
 
 const CustomerService = observer(() => {
@@ -19,16 +19,16 @@ const CustomerService = observer(() => {
 
 // 侧边栏-会话列表
 const ConversationSider = observer(() => {
-    const { messageRecordStore } = useRootStore()
+    const { conversationList, readMsg } = useMessage()
     return (
         <Sider
             style={{ backgroundColor: "#f5f5f5", }}
         >
             <div className={cssStyle["message-sider"]}>
-                <div className={cssStyle["message-sider-title"]}>用户列表</div>
+                <div className={cssStyle["message-sider-title"]}>会话列表</div>
                 <div className={cssStyle["message-sider-list"]}>
                     {
-                        messageRecordStore.conversationList.map((item,index) => {
+                        conversationList.map((item, index) => {
                             return <ConversationItem key={index} item={item} />
                         })
                     }
@@ -42,10 +42,11 @@ const ConversationItem = observer((prop: { item: Conversation }) => {
     const navigateTo = useNavigate();
     const { id } = useParams();
     const { item } = prop
+    const { readMsg } = useMessage()
 
     return (
         <div style={{ backgroundColor: id === item.user_id + '' ? 'rgb(115, 103, 240, 0.1)' : '#fff' }}>
-            <div className={cssStyle["msssage-sider-item"]} onClick={() => { navigateTo('user/' + item.user_id) }}>
+            <div className={cssStyle["msssage-sider-item"]} onClick={() => { readMsg(item.user_id.toString()); navigateTo('user/' + item.user_id) }}>
                 <div className={cssStyle["avatar"]}>
                     <img src={item.avatar ? item.avatar : DefaultAvatarSVG} />
                 </div>
@@ -57,7 +58,7 @@ const ConversationItem = observer((prop: { item: Conversation }) => {
                         {item.lastMessage}
                     </div>
                 </div>
-                <div className={cssStyle["msg-count"]}>{item.unreadCount > 99 ? `99+` : item.unreadCount}</div>
+                {item.unreadCount > 0 && <div className={cssStyle["msg-count"]}>{item.unreadCount > 99 ? `99+` : item.unreadCount}</div>}
             </div>
         </div>
     )

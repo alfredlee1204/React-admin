@@ -45,15 +45,20 @@ const ChatWindowTopbar = () => {
 
 const MessageList = observer(() => {
     const { id } = useParams();
+    const [msgData, setMsgData] = useState<Message[] | undefined>([])
     const { messageRecordStore } = useRootStore()
     const listEnd = useRef<HTMLDivElement | null>(null)
     useEffect(() => {
+        setMsgData(messageRecordStore.getMessageData(id ? id : ''))
+        console.log(messageRecordStore.getMessageData(id ? id : ''))
+    }, [id])
+    useEffect(() => {
         // 有新消息的时候自动滚到底部
         listEnd.current?.scrollIntoView(false);
-    }, [])
+    }, [msgData?.length])
     return (
         <div className={cssStyle["message-list"]}>
-            {messageRecordStore.getMessageData(Number(id))?.map(item => {
+            {msgData?.map(item => {
                 return (
                     <motion.div
                         key={item.time}
@@ -81,8 +86,8 @@ const InputArea = observer(() => {
 
     const sendMsg = useCallback(() => {
         // 非受控组件-完全由用户控制输入
-        if (textareaRef.current?.value) {
-            sendMessage(Number(id), textareaRef.current?.value)
+        if (textareaRef.current?.value && id) {
+            sendMessage(id, textareaRef.current?.value)
             textareaRef.current.value = ''
             textareaRef.current?.focus()
         }

@@ -1,36 +1,39 @@
 <html>
-  <head>
-    <script>
-      window.onload = function () {
-        let input = document.getElementsByTagName("input")[0];
-        const submit = document.getElementById("btn");
-        const socket = new WebSocket("ws://127.0.0.1:8888/ws/2");
 
-        // Connection opened
-        socket.addEventListener("open", function (event) {
-          socket.send("user 1 connnected");
-        });
+<head>
+  <script>
+    window.onload = function () {
+      let input = document.getElementsByTagName("input")[0];
+      const submit = document.getElementById("btn");
+      const socket = new WebSocket("ws://127.0.0.1:8888/ws/2");
 
-        // Listen for messages
-        socket.addEventListener("message", function (event) {
-          console.log("Message from server ", event.data);
-        });
+      // Connection opened
+      socket.addEventListener("open", function (event) {
+        socket.send("user 1 connnected");
+      });
 
-        submit.onclick = function () {
-          const entity = {
-            messageType: "CHAT_MESSAGE",
-            content: input.value,
-            target: 1,
-            from: 2,
-          };
-          const msg = JSON.stringify(entity);
-          socket.send(msg);
+      // Listen for messages
+      socket.addEventListener("message", function (event) {
+        console.log("Message from server ", event.data);
+      });
+
+      submit.onclick = function () {
+        const entity = {
+          messageType: "CHAT_MESSAGE",
+          content: input.value,
+          target: 1,
+          from: 2,
+          from_user_name: "user2"
         };
+        const msg = JSON.stringify(entity);
+        socket.send(msg);
       };
-    </script>
-  </head>
+    };
+  </script>
+</head>
 
-  <body>
-    <div><input /><button id="btn">发送</button></div>
-  </body>
+<body>
+  <div><input /><button id="btn">发送</button></div>
+</body>
+
 </html>
