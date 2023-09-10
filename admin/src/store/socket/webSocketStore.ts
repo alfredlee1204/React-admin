@@ -22,7 +22,8 @@ export class WebSocketStore {
                 this.wsInstance.onmessage = (ev: MessageEvent) => {
                     const data: Message = JSON.parse(ev.data);
                     if (data.messageType === "CHAT_MESSAGE")
-                        this.#root.messageRecordStore.addMessage(data.from, data)
+                        console.log(data)
+                    this.#root.messageRecordStore.addMessage(data.user_id, data)
                 }
             }
             return this.wsInstance
@@ -31,22 +32,22 @@ export class WebSocketStore {
         return this.wsInstance
     }
 
-    sendMessage = (target_id: number | string, msgContent: string) => {
+    sendMessage = (user_id: number, msgContent: string) => {
         if (this.wsInstance) {
             const msg: Message = {
                 messageType: "CHAT_MESSAGE",
-                target: target_id,
+                user_id: Number(user_id),
+                user_name: "user1",
                 content: msgContent,
-                from: 1,
+                staff_id: 1,
                 type: "text",
-                from_user_name: "user1",
                 time: 0,
-                isread: true
+                isread: true,
+                target_id: user_id
             }
             const msgJSON = JSON.stringify(msg)
             this.wsInstance.send(msgJSON)
-            this.#root.messageRecordStore.addMessage(target_id, msg)
-            console.log(target_id)
+            this.#root.messageRecordStore.addMessage(user_id, msg)
         }
     }
 }

@@ -11,10 +11,15 @@ import { observer } from "mobx-react-lite"
 import { motion } from 'framer-motion';
 import { useParams } from 'react-router-dom';
 import { Message } from '@/store/socket/model';
-import { useRootStore, useWebSocket } from '@/store/rootProvider';
+import { useMessage, useWebSocket } from '@/store/rootProvider';
 
 const ChatWindow = observer(() => {
     const { id } = useParams();
+    const { readMsg } = useMessage()
+
+    useEffect(() => {
+        readMsg(Number(id))
+    }, [id, readMsg])
     return (
         <div key={id} className={cssStyle["chatWindow"]} style={{ backgroundColor: "#fff" }}>
             <ChatWindowTopbar />
@@ -46,22 +51,21 @@ const ChatWindowTopbar = () => {
 const MessageList = observer(() => {
     const { id } = useParams();
     const [msgData, setMsgData] = useState<Message[] | undefined>([])
-    const { messageRecordStore } = useRootStore()
+    const { getMessageData } = useMessage()
     const listEnd = useRef<HTMLDivElement | null>(null)
     useEffect(() => {
-        setMsgData(messageRecordStore.getMessageData(id ? id : ''))
-        console.log(messageRecordStore.getMessageData(id ? id : ''))
-    }, [id])
+        setMsgData(getMessageData(Number(id)))
+    }, [getMessageData, id])
     useEffect(() => {
         // 有新消息的时候自动滚到底部
         listEnd.current?.scrollIntoView(false);
     }, [msgData?.length])
     return (
         <div className={cssStyle["message-list"]}>
-            {msgData?.map(item => {
+            {msgData?.map((item, index) => {
                 return (
                     <motion.div
-                        key={item.time}
+                        key={index}
                         layout
                         transition={{ duration: 0.2 }}
                         initial={{ y: 10, opacity: 0 }}
@@ -87,7 +91,7 @@ const InputArea = observer(() => {
     const sendMsg = useCallback(() => {
         // 非受控组件-完全由用户控制输入
         if (textareaRef.current?.value && id) {
-            sendMessage(id, textareaRef.current?.value)
+            sendMessage(Number(id), textareaRef.current?.value)
             textareaRef.current.value = ''
             textareaRef.current?.focus()
         }
@@ -108,9 +112,9 @@ const InputArea = observer(() => {
 })
 
 const MessageItem = (prop: { data: Message }) => {
-    const { content, from } = prop.data
+    const { content, target_id } = prop.data
 
-    return <div className={cssStyle[from === 1 ? "message-item-self" : "message-item-other"]}>
+    return <div className={cssStyle[target_id !== 1 ? "message-item-self" : "message-item-other"]}>
         <div className={cssStyle["message-body"]}>
             {content}
         </div>

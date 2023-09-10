@@ -10,13 +10,13 @@ function handleWs(ws, req) {
             const message = JSON.parse(msg)
             message['time'] = new Date().getTime()
             if (message["messageType"] === MessageType.CHAT_MESSAGE) {
-                if (wsClients[message['target']]) {
-                    message["isread"]=false;
-                    wsClients[message['target']].ws.send(JSON.stringify(message))
+                if (wsClients[message['target_id']]) {
+                    message["isread"] = false;
+                    wsClients[message['target_id']].ws.send(JSON.stringify(message))
 
                     // 消息回执
                     const receiptMsg = {
-                        id:message['id'],
+                        id: message['id'],
                         messageType: MessageType.RECEIPT,
                         status: 'success'
                     }

@@ -5,31 +5,29 @@
  * @LastEditors: Lethan
  * @LastEditTime: 2023-05-04 14:49:30
  */
-import { AlertOutlined, ExperimentOutlined } from '@ant-design/icons';
+import { AlertOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import style from './home.module.scss'
 import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import { useContext, useEffect } from 'react';
-import useApi from '@/service/api';
 import { useMessage, useWebSocket } from '@/store/rootProvider';
 import { observer } from 'mobx-react-lite';
 
 const { Content, Sider } = Layout;
 
-const Home =observer (function Home() {
+const Home = observer(function Home() {
     const { wsInit } = useWebSocket()
-    const {saveMessageData} = useMessage()
+    const { getMessageDataFromLocal } = useMessage()
     const navigateTo = useNavigate();
     const location = useLocation()
     const navigate = (prop: { key: string }) => {
         navigateTo(prop?.key)
     }
-    useEffect(()=>{
+    useEffect(() => {
         wsInit('1')
-        return ()=>{
-            saveMessageData()
-        }
-    },[saveMessageData, wsInit])
+        getMessageDataFromLocal()
+    }, [getMessageDataFromLocal, wsInit])
+
     // 处理侧边菜单的初始化
     const handleMenuInit = () => {
         let key = ''

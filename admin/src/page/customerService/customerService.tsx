@@ -28,7 +28,7 @@ const ConversationSider = observer(() => {
                 <div className={cssStyle["message-sider-title"]}>会话列表</div>
                 <div className={cssStyle["message-sider-list"]}>
                     {
-                        conversationList.map((item, index) => {
+                        conversationList.get().map((item, index) => {
                             return <ConversationItem key={index} item={item} />
                         })
                     }
@@ -42,11 +42,10 @@ const ConversationItem = observer((prop: { item: Conversation }) => {
     const navigateTo = useNavigate();
     const { id } = useParams();
     const { item } = prop
-    const { readMsg } = useMessage()
 
     return (
         <div style={{ backgroundColor: id === item.user_id + '' ? 'rgb(115, 103, 240, 0.1)' : '#fff' }}>
-            <div className={cssStyle["msssage-sider-item"]} onClick={() => { readMsg(item.user_id.toString()); navigateTo('user/' + item.user_id) }}>
+            <div className={cssStyle["msssage-sider-item"]} onClick={() => { navigateTo('user/' + item.user_id) }}>
                 <div className={cssStyle["avatar"]}>
                     <img src={item.avatar ? item.avatar : DefaultAvatarSVG} />
                 </div>

@@ -2,11 +2,12 @@ export type Message = {
     messageType: string
     type: 'text' | 'image' | 'video'
     content: string,
-    from: number,
-    from_user_name: string,
-    target: string | number,
+    user_id: number,
+    user_name: string,
+    staff_id: number,
     time: number,
-    isread: boolean
+    isread: boolean,
+    target_id: number
 }
 
 export type Conversation = {
