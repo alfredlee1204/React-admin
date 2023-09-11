@@ -58,11 +58,16 @@ export class WebSocketStore {
 
     // 重连
     reconnect = () => {
+        let Time:NodeJS.Timer|null = null
         if (!this.wsStatus) {
-            setInterval(() => {
+            Time=setInterval(() => {
                 this.wsInstance = new WebSocket(import.meta.env.VITE_SCOKET_DOMAIN + 1)
                 this.handleConnect()
             }, 1000)
+        }else {
+            if(Time){
+                clearInterval(Time)
+            }
         }
     }
     sendMessage = (user_id: number, msgContent: string) => {

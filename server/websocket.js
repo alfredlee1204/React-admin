@@ -20,7 +20,6 @@ function handleWs(ws, req) {
                         messageType: MessageType.RECEIPT,
                         status: 'success'
                     }
-                    console.log(message['target_id'] === message['user_id'] ? message['staff_id'] : message['user_id'])
                     wsClients[(message['target_id'] === message['user_id'] ? message['staff_id'] : message['user_id'])].ws.send(JSON.stringify(receiptMsg))
                 }
             }
