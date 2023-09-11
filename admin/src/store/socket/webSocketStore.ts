@@ -10,32 +10,12 @@ export class WebSocketStore {
     #root: RootStore
     wsInstance: WebSocket | null = null
     messageBuffer = new Map<number, Message>//消息缓冲区
-
+    wsStatus = false//ws是否连接
     wsInit = (token: string): WebSocket => {
         if (!this.wsInstance) {
             this.wsInstance = new WebSocket(import.meta.env.VITE_SCOKET_DOMAIN + token)
             if (this.wsInstance) {
-                this.wsInstance.onopen = function () {
-                    console.log('user connected')
-                }
-                this.wsInstance.onclose = function () {
-                    console.log('unconnect')
-                }
-                this.wsInstance.onmessage = (ev: MessageEvent) => {
-                    const data: Message = JSON.parse(ev.data);
-                    if (data.messageType === "CHAT_MESSAGE") {
-                        this.#root.messageRecordStore.addMessage(data.user_id, data)
-                    }
-                    console.log(data)
-
-                    //收到发送成功的回执之后，把消息加入聊天记录集合
-                    if (data.messageType === "RECEIPT") {
-                        const res = this.messageBuffer.get(data.id)
-                        if (res) {
-                            this.#root.messageRecordStore.addMessage(res.user_id, res)
-                        }
-                    }
-                }
+                this.handleConnect()
             }
             return this.wsInstance
         }
@@ -43,6 +23,48 @@ export class WebSocketStore {
         return this.wsInstance
     }
 
+    handleConnect = () => {
+        if (this.wsInstance) {
+
+            this.wsInstance.onopen = () => {
+                console.log('user connected')
+                this.wsStatus = true
+            }
+            this.wsInstance.onclose = () => {
+                this.wsStatus = false
+                this.reconnect()
+            }
+            this.wsInstance.onmessage = (ev: MessageEvent) => {
+                const data: Message = JSON.parse(ev.data);
+                if (data.messageType === "CHAT_MESSAGE") {
+                    this.#root.messageRecordStore.addMessage(data.user_id, data)
+                }
+                console.log(data)
+
+                //收到发送成功的回执之后，把消息加入聊天记录集合
+                if (data.messageType === "RECEIPT") {
+                    const res = this.messageBuffer.get(data.id)
+                    if (res) {
+                        this.#root.messageRecordStore.addMessage(res.user_id, res)
+                    }
+                }
+            }
+            this.wsInstance.onerror = () => {
+                this.wsStatus = false
+                this.reconnect()
+            }
+        }
+    }
+
+    // 重连
+    reconnect = () => {
+        if (!this.wsStatus) {
+            setInterval(() => {
+                this.wsInstance = new WebSocket(import.meta.env.VITE_SCOKET_DOMAIN + 1)
+                this.handleConnect()
+            }, 1000)
+        }
+    }
     sendMessage = (user_id: number, msgContent: string) => {
         if (this.wsInstance) {
             const msg: Message = {

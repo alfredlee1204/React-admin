@@ -15,7 +15,7 @@ function handleWs(ws, req) {
                     wsClients[message['target_id']].ws.send(JSON.stringify(message))
 
                     // 消息回执
-                    const receiptMsg = {
+                    const receiptMsg = { 
                         id: message['id'],
                         messageType: MessageType.RECEIPT,
                         status: 'success'
