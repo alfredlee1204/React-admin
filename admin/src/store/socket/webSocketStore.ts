@@ -9,6 +9,8 @@ export class WebSocketStore {
     }
     #root: RootStore
     wsInstance: WebSocket | null = null
+    messageBuffer = new Map<number, Message>//消息缓冲区
+
     wsInit = (token: string): WebSocket => {
         if (!this.wsInstance) {
             this.wsInstance = new WebSocket(import.meta.env.VITE_SCOKET_DOMAIN + token)
@@ -21,9 +23,18 @@ export class WebSocketStore {
                 }
                 this.wsInstance.onmessage = (ev: MessageEvent) => {
                     const data: Message = JSON.parse(ev.data);
-                    if (data.messageType === "CHAT_MESSAGE")
-                        console.log(data)
-                    this.#root.messageRecordStore.addMessage(data.user_id, data)
+                    if (data.messageType === "CHAT_MESSAGE") {
+                        this.#root.messageRecordStore.addMessage(data.user_id, data)
+                    }
+                    console.log(data)
+
+                    //收到发送成功的回执之后，把消息加入聊天记录集合
+                    if (data.messageType === "RECEIPT") {
+                        const res = this.messageBuffer.get(data.id)
+                        if (res) {
+                            this.#root.messageRecordStore.addMessage(res.user_id, res)
+                        }
+                    }
                 }
             }
             return this.wsInstance
@@ -35,6 +46,7 @@ export class WebSocketStore {
     sendMessage = (user_id: number, msgContent: string) => {
         if (this.wsInstance) {
             const msg: Message = {
+                id: 1 + new Date().getTime(),
                 messageType: "CHAT_MESSAGE",
                 user_id: Number(user_id),
                 user_name: "user1",
@@ -47,7 +59,7 @@ export class WebSocketStore {
             }
             const msgJSON = JSON.stringify(msg)
             this.wsInstance.send(msgJSON)
-            this.#root.messageRecordStore.addMessage(user_id, msg)
+            this.messageBuffer.set(msg.id, msg)
         }
     }
 }

@@ -6,8 +6,9 @@ export class MessageRecordStore {
         makeAutoObservable(this)
     }
 
-    messageMap: Map<string, Message[]> = new Map()
-    activeRoom = -1;
+    messageMap: Map<string, Message[]> = new Map()//消息记录
+    activeRoom = -1;//当前活跃的房间
+
     // 从缓存提取历史聊天记录
     getMessageDataFromLocal = () => {
         console.log('读取本地聊天记录', this.messageMap)

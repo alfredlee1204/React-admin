@@ -1,4 +1,5 @@
 export type Message = {
+    id:number,
     messageType: string
     type: 'text' | 'image' | 'video'
     content: string,
