@@ -7,6 +7,7 @@ import DefaultAvatarSVG from '@/assets/images/default-user.svg'
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { useMessage, useRootStore } from "@/store/rootProvider";
 import { Conversation } from "@/store/socket/model";
+import { useEffect } from "react";
 
 const CustomerService = observer(() => {
     return <Layout style={{ height: '100%', borderRadius: 10, overflow: "hidden" }}>
@@ -39,13 +40,13 @@ const ConversationSider = observer(() => {
 })
 
 const ConversationItem = observer((prop: { item: Conversation }) => {
-    const navigateTo = useNavigate();
+    const navigate = useNavigate();
     const { id } = useParams();
     const { item } = prop
 
     return (
         <div style={{ backgroundColor: id === item.user_id + '' ? 'rgb(115, 103, 240, 0.1)' : '#fff' }}>
-            <div className={cssStyle["msssage-sider-item"]} onClick={() => { navigateTo('user/' + item.user_id) }}>
+            <div className={cssStyle["msssage-sider-item"]} onClick={() => { navigate('user/' + item.user_id) }}>
                 <div className={cssStyle["avatar"]}>
                     <img src={item.avatar ? item.avatar : DefaultAvatarSVG} />
                 </div>

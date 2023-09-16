@@ -8,13 +8,17 @@ export function useRootStore() {
     return useContext(RootContext);
 }
 
-export const useWebSocket = ()=>{
-   return useRootStore().webSocketStore
+export const useWebSocket = () => {
+    return useRootStore().webSocketStore
 }
 
-export const useMessage = ()=>{
+export const useNavigateMobx = () => {
+    return useRootStore().navigatorStore
+}
+
+export const useMessage = () => {
     return useRootStore().messageRecordStore
- }
+}
 
 export function RootStoreProvider({ children }: { children: JSX.Element }) {
     const rootStore: RootStore = new RootStore();

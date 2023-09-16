@@ -25,7 +25,7 @@ export class WebSocketStore {
 
     handleConnect = () => {
         if (this.wsInstance) {
-
+            this.#root.notificationStore.init()
             this.wsInstance.onopen = () => {
                 console.log('user connected')
                 this.wsStatus = true
@@ -38,6 +38,7 @@ export class WebSocketStore {
                 const data: Message = JSON.parse(ev.data);
                 if (data.messageType === "CHAT_MESSAGE") {
                     this.#root.messageRecordStore.addMessage(data.user_id, data)
+                    this.#root.notificationStore.sendNotification({ title: data.user_name, body: JSON.stringify({ user_id: data.user_id, content: data.content }) })
                 }
                 console.log(data)
 
@@ -58,14 +59,14 @@ export class WebSocketStore {
 
     // 重连
     reconnect = () => {
-        let Time:NodeJS.Timer|null = null
+        let Time: NodeJS.Timer | null = null
         if (!this.wsStatus) {
-            Time=setInterval(() => {
+            Time = setInterval(() => {
                 this.wsInstance = new WebSocket(import.meta.env.VITE_SCOKET_DOMAIN + 1)
                 this.handleConnect()
             }, 1000)
-        }else {
-            if(Time){
+        } else {
+            if (Time) {
                 clearInterval(Time)
             }
         }
