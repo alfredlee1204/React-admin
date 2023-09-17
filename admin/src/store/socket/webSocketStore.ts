@@ -60,10 +60,12 @@ export class WebSocketStore {
     // 重连
     reconnect = () => {
         let Time: NodeJS.Timer | null = null
-        if (!this.wsStatus) {
+        let count = 10//重连次数
+        if (!this.wsStatus && count > 0) {
             Time = setInterval(() => {
                 this.wsInstance = new WebSocket(import.meta.env.VITE_SCOKET_DOMAIN + 1)
                 this.handleConnect()
+                count--
             }, 1000)
         } else {
             if (Time) {
